@@ -35,49 +35,53 @@ void userMemoryAllocation() {
     const int PAGE_SIZE_MB = 160; // Each page size in MB
     const int START_ADDRESS = 2000; // Starting memory address
     
-    vector<int> memory(TOTAL_PAGES, -1); // Memory representation, -1 means free
-    vector<Process> processList; // List to store allocated processes
+    vector<int> memory(TOTAL_PAGES, -1);
+    vector<Process> processList;
     
-    int currentAddress = START_ADDRESS; // Initialize starting address
-    int processId = 1; // Process ID counter
+    int currentAddress = START_ADDRESS;
+    int processId = 1;
     
     // Allocate memory to processes until no sufficient space is left
     while (std::count(memory.begin(), memory.end(), -1) > 0) {
-        int processSizePages = rand() % 30 + 1; // Generate random pages between 1-30
+        int processSizePages = rand() % 30 + 1;
         int processSizeMB = processSizePages * 80; // Convert to MB
         int pagesNeeded = ceil(static_cast<double>(processSizeMB) / PAGE_SIZE_MB); // Calculate required pages
         
         // Check if enough memory is available
         if (std::count(memory.begin(), memory.end(), -1) < pagesNeeded) {
-            break; // Stop allocation if not enough space
+            break;
         }
         
         int allocatedPages = 0;
         // Allocate memory pages to the process
         for (int i = 0; i < TOTAL_PAGES; i++) {
-            if (memory[i] == -1) { // If page is free
+            if (memory[i] == -1) {
                 memory[i] = processId; // Assign process ID to the page
                 allocatedPages++;
-                if (allocatedPages == pagesNeeded) break; // Stop when enough pages are allocated
+                if (allocatedPages == pagesNeeded) break;
             }
         }
         
-        int totalAllocatedMemoryMB = pagesNeeded * PAGE_SIZE_MB; // Total memory allocated
+         // Total memory allocated
+        int totalAllocatedMemoryMB = pagesNeeded * PAGE_SIZE_MB;
+
+        // Total memory allocated
         int unusedSpaceMB = totalAllocatedMemoryMB - processSizeMB; // Calculate unused space
         
         // Store process information
         processList.push_back({processId, currentAddress, processSizeMB, unusedSpaceMB});
         
-        currentAddress += totalAllocatedMemoryMB; // Update starting address for next process
-        processId++; // Increment process ID
+        // Update starting address for next process
+        currentAddress += totalAllocatedMemoryMB;
+        processId++;
     }
     
     // Print Summary Report
-    cout << "\nSummary Report" << endl;
-    cout << "Process Id   Starting Address   Size (MB)   Unused Space (MB)" << endl;
+    cout << "\nSummary Report:" << endl;
+    cout << "Process Id   Starting Memory Address   Size of the Process (MB)   Unused Space (MB)" << endl;
     for (const auto& process : processList) {
-        cout << process.processId << "\t" << process.startingAddress << "\t\t" 
-             << process.processSizeMB << "\t\t" << process.unusedSpaceMB << endl;
+        cout << "\t" << process.processId << "\t\t" << process.startingAddress << "\t\t\t" 
+             << process.processSizeMB << "\t\t\t" << process.unusedSpaceMB << endl;
     }
 }
 
